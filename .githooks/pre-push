@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+while IFS= read -r -d '' file; do
+  if [[ ! -s "$file" ]]; then
+    echo "Error: archivo Java vacio detectado. Push cancelado."
+    echo "$file"
+    exit 1
+  fi
+
+  if [[ -z "$(tr -d '[:space:]' < "$file")" ]]; then
+    echo "Error: archivo Java con solo espacios detectado. Push cancelado."
+    echo "$file"
+    exit 1
+  fi
+done < <(find src -type f -name "*.java" -print0)
+
+echo "OK: verificacion de archivos Java completada."
